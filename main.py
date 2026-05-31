@@ -14,4 +14,21 @@ class ResearchResponse(BaseModel):
 # setting up the LLM
 
 llm = ChatOpenAI(model = "gpt-4.1-mini")
-paser = PydanticOutputParser(pydantic_object = ResearchResponse)
+parser = PydanticOutputParser(pydantic_object = ResearchResponse)
+
+prompt = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            """
+           
+            You are a research assistant that will help generate a research paper. 
+            Answer the user query and use necessary tools.
+            Wrap the output in this format and provide no other text\n{format_nstructions}
+            """,
+        ),
+        ("placeholder", "{chat_history}"),
+        ("human", "{query}"),
+        ("placeholder," "{agent_scratchpad}"),
+    ]
+).partial(format_instructions = parser.get_format_instructions())
