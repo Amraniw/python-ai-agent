@@ -4,6 +4,7 @@ from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
+from langchain.agents import create_tool_calling_agent, AgentExecutor
 
 load_dotenv()
 class ResearchResponse(BaseModel):
@@ -32,3 +33,12 @@ prompt = ChatPromptTemplate.from_messages(
         ("placeholder," "{agent_scratchpad}"),
     ]
 ).partial(format_instructions = parser.get_format_instructions())
+
+agent = create_tool_calling_agent(
+    LLm = llm,
+    prompt = prompt,
+    tools = []
+)
+
+agent_executor = AgentExecutor(agent=agent, tools=[], verbose = True)
+raw_response = agent_executor.invoke({"query": "How many rings does Michael Jordan have?", "name":"James"})
