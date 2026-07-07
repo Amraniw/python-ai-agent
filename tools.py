@@ -10,7 +10,7 @@ def save_to_txt(data: str, filename: str = "research_output.txt"):
     with open(filename, "a", encoding="utf-8") as f:
         f.write(formated_text)
     
-    return f"Data succesfully saved to {filename}"
+    return f"Data successfully saved to {filename}"
 
 save_tool = Tool(
     name="save_text_to_file",
